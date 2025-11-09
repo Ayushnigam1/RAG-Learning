@@ -1,7 +1,7 @@
-import { qClient } from "./qdrantClient.ts";
-import { chunkText } from "../utills/chunker.ts";
-import { getEmbedding } from "../utills/embedder.ts";
-import { extractTextFromFile } from "../utills/extractor.ts";
+import { qClient } from "./qdrantClient";
+import { chunkText } from "../utills/chunker";
+import { getEmbedding } from "../utills/embedder";
+import { extractTextFromFile } from "../utills/extractor";
 
 
 /*

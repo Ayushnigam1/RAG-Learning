@@ -22,9 +22,9 @@ export const query = async (query:string) => {
 
 };  
 
-query("What technologies do I have experience with").then((ans)=>{
-    console.log("Generated Answer:",ans);
-}).catch((err)=>console.error("Error in query:",err));
+// query("What technologies do I have experience with").then((ans)=>{
+//     console.log("Generated Answer:",ans);
+// }).catch((err)=>console.error("Error in query:",err));
 // for terminal input
 // const rl = readline.createInterface({
 //     input: process.stdin,
