@@ -26,7 +26,7 @@ server/.env
 # -------------------------------
 # Next.js build
 rag-ui/.next/
-rag-ui/out/
+
 
 # Express build or dist output (if you ever compile TypeScript)
 server/dist/

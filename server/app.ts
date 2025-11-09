@@ -2,10 +2,10 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import multer from "multer";
-import { ingest } from "./src/ingest.ts";
+import { ingest } from "./src/ingest";
 import path from "path";
 import fs from "fs";
-import { query } from "./src/query.ts";
+import { query } from "./src/query";
 
 
 dotenv.config();

@@ -1,5 +1,5 @@
-import { qClient } from "./qdrantClient.ts";
-import { getEmbedding, queryEmbedding, TextGenerator } from "../utills/embedder.ts";
+import { qClient } from "./qdrantClient";
+import { getEmbedding, queryEmbedding, TextGenerator } from "../utills/embedder";
 import readline from "readline";
 
 export const query = async (query:string) => {
