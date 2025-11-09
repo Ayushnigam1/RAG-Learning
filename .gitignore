@@ -1,0 +1,48 @@
+# -------------------------------
+# Global Node.js ignores
+# -------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+.pnpm-debug.log
+
+
+# -------------------------------
+# Build outputs
+# -------------------------------
+# Next.js build
+rag-ui/.next/
+rag-ui/out/
+
+# Express build or dist output (if you ever compile TypeScript)
+server/dist/
+server/build/
+
+# -------------------------------
+# Logs and caches
+# -------------------------------
+*.log
+logs/
+.cache/
+.next/
+coverage/
+.tmp/
+
+# -------------------------------
+# OS / IDE specific
+# -------------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# -------------------------------
+# Misc
+# -------------------------------
+# Optional: ignore local test data or uploads
+uploads/
+tmp/
