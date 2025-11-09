@@ -4,7 +4,7 @@ import {encode, decode} from 'gpt-3-encoder';
  * Splits the given text into chunks of specified maximum token size.
  * @param text - The text to be chunked.
  * @param maxTokens - The maximum number of tokens per chunk.
- * @returns An array of text chunks.    
+ * @returns An array of text chunks    
 
  */ 
 
