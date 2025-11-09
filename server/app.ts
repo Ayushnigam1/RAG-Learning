@@ -14,6 +14,11 @@ const app = express();
 // ✅ Register CORS before everything else
 app.use(cors()); 
 app.use(express.json());
+const uploadDir = path.join(process.cwd(), "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+  console.log("✅ Created uploads directory:", uploadDir);
+}
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
