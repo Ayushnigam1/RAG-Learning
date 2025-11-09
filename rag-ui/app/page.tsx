@@ -21,7 +21,8 @@ import { useState } from "react";
 import { FiUpload, FiFile, FiSend, FiMessageSquare } from "react-icons/fi";
 import Footer from "@/components/Footer";
 
-const API_URL = "http://localhost:5050";
+// const API_URL = "http://localhost:5050";
+const API_URL = "https://rag-learning.onrender.com";
 
 export default function Home() {
   const [question, setQuestion] = useState("");
