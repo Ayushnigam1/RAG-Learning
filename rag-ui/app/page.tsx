@@ -20,6 +20,7 @@ import {
 import { useState } from "react";
 import { FiUpload, FiFile, FiSend, FiMessageSquare } from "react-icons/fi";
 import Footer from "@/components/Footer";
+import MarkdownRenderer from "@/components/MarkdownRenderer";
 
 // const API_URL = "http://localhost:5050";
 const API_URL = "https://rag-learning.onrender.com";
@@ -27,6 +28,7 @@ const API_URL = "https://rag-learning.onrender.com";
 export default function Home() {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [sources, setSources] = useState<Array<{ fileName?: unknown; chunkIndex?: unknown; score?: number }>>([]);
   const [File, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -49,6 +51,7 @@ export default function Home() {
     
     setLoading(true);
     setAnswer("");
+    setSources([]);
     
     try {
       const response = await fetch(`${API_URL}/api/query`, {
@@ -60,7 +63,9 @@ export default function Home() {
       });
 
       const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Query failed");
       setAnswer(data.answer);
+      setSources(data.sources || []);
       
     } catch (error) {
       console.error("Error fetching answer:", error);
@@ -181,7 +186,7 @@ export default function Home() {
                     <Input
                       type="file"
                       onChange={handleFileChange}
-                      accept=".pdf"
+      accept=".pdf,.docx,.txt"
                       variant="outline"
                       size="lg"
                     />
@@ -285,15 +290,19 @@ export default function Home() {
                       borderColor="border.subtle"
                       w="100%"
                     >
-                      <Text 
-                        fontSize="lg" 
-                        color="fg.emphasized" 
-                        lineHeight="1.6"
-                        whiteSpace="pre-wrap"
-                        fontFamily="inherit"
-                      >
-                        {answer}
-                      </Text>
+                      <MarkdownRenderer answer={answer} />
+                      {sources.length > 0 && (
+                        <Box mt={4}>
+                          <Text fontSize="sm" color="fg.muted" mb={2}>
+                            Sources
+                          </Text>
+                          {sources.map((source, index) => (
+                            <Text key={`${String(source.fileName)}-${String(source.chunkIndex)}-${index}`} fontSize="sm" color="fg.muted">
+                              {String(source.fileName || "Unknown file")} · chunk {String(source.chunkIndex ?? "-")}
+                            </Text>
+                          ))}
+                        </Box>
+                      )}
                     </Box>
                   )}
                 </Card.Body>

@@ -12,7 +12,11 @@ dotenv.config();
 
 const app = express();
 // ✅ Register CORS before everything else
-app.use(cors()); 
+app.use(cors({
+  origin: process.env.FRONTEND_ORIGIN
+    ? process.env.FRONTEND_ORIGIN.split(",").map(origin => origin.trim())
+    : true,
+}));
 app.use(express.json());
 const uploadDir = path.join(process.cwd(), "uploads");
 if (!fs.existsSync(uploadDir)) {
@@ -30,7 +34,15 @@ const storage = multer.diskStorage({
     cb(null, file.fieldname + "-" + uniqueSuffix + ext);
   },
 });
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: 20 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    const allowed = [".pdf", ".docx", ".txt"];
+    const extension = path.extname(file.originalname).toLowerCase();
+    cb(null, allowed.includes(extension));
+  },
+});
 
 app.post("/api/ingest", upload.single("file"), async (req, res) => {
   try {
@@ -44,7 +56,7 @@ app.post("/api/ingest", upload.single("file"), async (req, res) => {
     console.log(`📁 File uploaded to: ${filePath}`);
 
     try {
-    await ingest(filePath);
+    await ingest(filePath, req.file.originalname);
     console.log("✅ Ingestion completed successfully");
     } catch (ingestError) {
       console.error("❌ Ingestion failed:", ingestError);
@@ -52,23 +64,30 @@ app.post("/api/ingest", upload.single("file"), async (req, res) => {
     }
 
     // (Optional) delete the file after ingestion
-    fs.unlink(filePath, (err) => {
-      if (err) console.warn("⚠️ Failed to delete temp file:", err);
-      else console.log("🧹 Temp file deleted:", filePath);
-    });
-
     res.status(200).json({ message: "File ingested successfully" });
   } catch (error) {
     console.error("❌ Error during ingestion:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (req.file?.path) {
+      fs.promises.unlink(path.resolve(req.file.path)).catch(() => undefined);
+    }
   }
 });
 
 app.post("/api/query", async (req, res) => {
-  const { question } = req.body;
-  console.log(`❓ Received question: ${question}`);
-  const answer = await query(question)
-  res.json({ answer:answer });
+  try {
+    const { question } = req.body;
+    if (typeof question !== "string" || !question.trim()) {
+      return res.status(400).json({ error: "A question is required" });
+    }
+    console.log(`❓ Received question: ${question}`);
+    const result = await query(question);
+    res.json(result);
+  } catch (error) {
+    console.error("❌ Query failed:", error);
+    res.status(500).json({ error: "Query failed" });
+  }
 })
 
 const PORT = 5050;
